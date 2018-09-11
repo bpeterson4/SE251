@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Random Grid</title>
+</head>
+<body>
+<form name="tablegen">
+<input type="text" name="grid" id="gridSize"/>
+<input type="button" id="generatorButton" value="Generate Grid!">
+</form>
+
+<div id="grid"></div>
+
+The average is : <div id="average"></div>
+
+<script type="text/javascript">
+
+var button = document.getElementById('generatorButton');
+
+
+button.onclick = function(e) {
+  document.getElementById("grid").innerHTML = createGrid();
+  document.getElementById("average").innerText = getGridAverage()
+}
+function createGrid()
+{
+    gridSize = parseInt(document.getElementById('gridSize').value);
+    var str = "<table border='2'>";
+    
+    for (let row = 0; row < gridSize; row++) 
+    {
+      str += "<tr>";
+    
+      for (col = 0; col < gridSize; col++) 
+    {
+        var randNumber = Math.floor(Math.random() * 100) + 1;
+      
+        if (randNumber % 3 === 0) 
+      {
+          str += '<td style="background: red;">';
+        } 
+      else if (randNumber % 2 === 0 && !randNumber % 3 === 0) 
+      {
+          str += '<td style="background: blue;">';
+        } 
+      else 
+      {
+          str += "<td>";
+      }
+      
+      str += randNumber + "</td>";
+
+    }
+      str += "</tr>";
+  }
+  str = str + "</table>";
+  return str;
+}
+
+function getGridAverage()
+{
+  let cells = document.querySelectorAll("#grid td");
+  let sum = 0;
+  for (const cell of cells)
+  {
+    sum += parseFloat(cell.innerHTML);
+  }
+ 
+  return sum / cells.length;
+}
+
+</script>
+
+</body>
+</html>
