@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Practical</title>
+<style type="text/css">
+	section{
+		
+		margin-bottom:25px;
+	}
+	
+	section section{
+		width:100%;
+		float:left;
+		border:1px solid black;
+	}
+	#main-content section{
+		width:33%;
+		float:left
+	}
+	
+	#main-content{
+	margin-bottom:25px;
+	}
+</style>
+</head>
+<body>
+<div id="main-content">
+<section id="database-analyst-area" >
+<h2>Database Analyst</h2>
+	<h3>First Name:</h3>
+	<div class="first"></div>
+	<h3>Last Name:</h3>
+	<div class="last"></div>
+	<h3>Highest Paid Salary</h3>
+	<div class="analysthighest"></div>
+	<h3>Highest Average Paid Salery</h3>
+	<h3 class="averageanalyst"></h3>
+</section >
+
+<section  id="web-developer-area" >
+<h2>Web Developer</h2>
+	<h3>First Name:</h3>
+	<div class="first"></div>
+	<h3>Last Name:</h3>
+	<div class="last"></div>
+	<h3>Highest Paid Salary</h3>
+	<div class="highest"></div>
+	<h3>Highest Average Paid Salery</h3>
+	<h3 class="average"></h3>
+</section >
+
+<section  id="software-engineer-area">
+<h2>Software Engineer</h2>
+	<h3>First Name:</h3>
+	<div class="first"></div>
+	<h3>Last Name:</h3>
+	<div class="last"></div>
+	<h3>Highest Paid Salary</h3>
+	<div class="highest"></div>
+	<h3>Highest Average Paid Salery</h3>
+	<h3 class="average"></h3>
+</section >
+</div>
+<section  id="search-area">
+	<input type="text" placeholder="First Name" id="first-name">
+	<input type="text" placeholder="Last Name" id="last-name">
+	<input type="button" id="search-submit" value="search">
+	<section id="search-output">
+	<h2>Search Output</h2>
+	<div class="output">
+		<!--Output search info to here.-->
+	</div>
+	</section>
+</section >
+
+<section  id="list-area">
+	<input type="button" value="List Database Analysts" id="list-database-analyst">
+	<input type="button" value="List Web Developers" id="list-web-developer">
+	<input type="button" value="List Software Engineers" id="list-software-engineer" >
+	<section id="list-output">
+	<h2>List Output</h2>
+		<div class="output">
+			<!--Output list info to here.-->
+		</div>
+	</section>
+</section >
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script>
+$("document").ready(function(){
+    	$.getJSON(
+				{
+					url: " http://ict.neit.edu/evanrense/salaries.php", 
+					success: function(result)
+					{
+							
+							var people = [];
+							people = result;
+							var dataPeople = [];
+							var webPeople = [];
+							var softwarePeople = [];
+							
+
+						for(var i = 0; i < people.length; i++)	
+							{
+								if(people[i].jobTitle === "Database Analyst")
+								{
+									dataPeople.push(people[i]);
+								}
+								
+								if(people[i].jobTitle === "Web Developer")
+								{
+									webPeople.push(people[i]);
+								}
+								
+								if(people[i].jobTitle === "Software Developer")
+								{
+									softwarePeople.push(people[i]);
+								}							
+							}
+							
+					dataPeople.sort(function(a,b){
+					return b.salary - a.salary;});				
+					
+					webPeople.sort(function(a,b){
+					return b.salary - a.salary;});
+					
+					softwarePeople.sort(function(a,b){
+					return b.salary - a.salary;});
+				
+						var totalDataSalary = 0;
+						var dataAverage = 0;
+						
+						for(var d = 0; d < dataPeople.length; d++)
+							{
+								totalDataSalary += parseInt(dataPeople[d].salary);						
+							}
+							
+							dataAverage = totalDataSalary / dataPeople.length;
+					
+					
+					$("#database-analyst-area .first").text(dataPeople[0].name.first);
+					$("#database-analyst-area .last").text(dataPeople[0].name.last);
+					$("#database-analyst-area .analysthighest").text("$" + dataPeople[0].salary).css('color','green');
+					$("#database-analyst-area .averageanalyst").text("$" + dataAverage.toFixed(2));
+									
+					var totalWebSalary = 0;
+					var webAverage = 0;
+					
+					for(var w = 0; w < webPeople.length; w++)
+						{
+							totalWebSalary += parseInt(webPeople[w].salary);						
+						}
+						
+						webAverage = totalWebSalary / webPeople.length;
+					
+					$("#web-developer-area .first").text(webPeople[0].name.first);
+					$("#web-developer-area .last").text(webPeople[0].name.last);
+					$("#web-developer-area .highest").text("$" + webPeople[0].salary).css('color','green');
+					$("#web-developer-area .average").text("$" + webAverage.toFixed(2));
+
+					var totalSoftwareSalary = 0;
+					var softwareAverage = 0;
+					for(var s = 0; s < softwarePeople.length; s++)
+						{
+							totalSoftwareSalary += parseInt(softwarePeople[s].salary);
+						}
+						
+						 softwareAverage = totalSoftwareSalary / softwarePeople.length;
+									
+					$("#software-engineer-area .first").text(softwarePeople[0].name.first);
+					$("#software-engineer-area .last").text(softwarePeople[0].name.last);
+					$("#software-engineer-area .highest").text("$" + softwarePeople[0].salary).css('color','green');
+					$("#software-engineer-area .average").text("$" + softwareAverage.toFixed(2));				
+						
+						$("#search-submit").click(function(){	
+						$("#search-output .output").text("No Record Found").css('color','red');
+													
+							for(var i = 0;i<people.length;i++)
+							{	
+								
+									
+									if(people[i].name.first == $("#first-name").val() && people[i].name.last == $("#last-name").val())
+										{
+											$("#search-output .output").text(people[i].name.first + " " + people[i].name.last + "" + people[i].jobTitle + " " + "$" + people[i].salary).css('color','black');
+											return;
+																			
+										}									
+									
+							}
+						});							
+						
+						$("#list-database-analyst").click(function(){
+													
+							$("#list-output .output").html("");
+							var dataEmployee = "";
+							var dataString = "";
+							for(var d = 0; d <dataPeople.length; d++)
+							{
+								dataEmployee += "<p>";
+								dataEmployee += dataPeople[d].name.first + " " + dataPeople[d].name.last + " " + "$" + dataPeople[d].salary;
+								dataEmployee += "</p>";
+															
+							}
+							 dataString += dataEmployee; 							
+							$("#list-output .output").append(dataString);
+												
+						});
+
+					$("#list-web-developer").click(function(){
+							
+							$("#list-output .output").html("");
+							var webEmployee = "";
+							var webString = "";
+							for(var w = 0; w < webPeople.length; w++)
+								{
+									webEmployee +="<p>";
+									webEmployee += webPeople[w].name.first + " " + webPeople[w].name.last + " " + webPeople[w].salary;
+									webEmployee += "</p>";									
+								}
+								
+								webString += webEmployee;						
+								$("#list-area .output").append(webString);
+							});
+					$("#list-software-engineer").click(function(){
+						
+						$("#list-output .output").html("");
+						var softwareEmployee = "";
+						var softwareString = "";
+						for(var s = 0; s < softwarePeople.length; s++)
+							{
+								softwareEmployee += "<p>";
+								softwareEmployee += softwarePeople[s].name.first + "  " + softwarePeople[s].name.last + "  " + softwarePeople[s].salary;
+								softwareEmployee += "</p>";								
+							}
+					
+							softwareString += softwareEmployee;
+							$("#list-output .output").append(softwareString);
+						});
+
+					}
+				}
+			  );
+	});
+	
+</script>
+
+</body>
+</html>
